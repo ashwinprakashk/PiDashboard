@@ -102,7 +102,7 @@ support the Pi 5).
 ### 2. Get the code
 
 ```bash
-git clone https://github.com/<your-user>/Fanclock.git ~/Fanclock
+git clone https://github.com/ashwinprakashk/Fanclock.git ~/Fanclock
 cd ~/Fanclock
 ```
 

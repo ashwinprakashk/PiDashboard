@@ -5,4 +5,3 @@ matplotlib
 numpy
 tkcalendar
 # Raspberry Pi only. On a Pi 5 use the system package instead: sudo apt install python3-rpi-lgpio
-RPi.GPIO; platform_machine == "aarch64" or platform_machine == "armv7l"

@@ -1180,7 +1180,7 @@ class FanClockApp:
 
             x, y = text_obj.get_position()
             # Smaller step for smoother motion
-            text_obj.set_position((x - 0.004, y))
+            text_obj.set_position((x - 0.012, y))
 
             renderer = self.canvas.get_renderer()
             bbox_text = text_obj.get_window_extent(renderer=renderer)
@@ -1192,7 +1192,7 @@ class FanClockApp:
 
         self.canvas.draw_idle()
         # Slightly longer interval for smoother redraws
-        self.root.after(1, self.scroll_news)
+        self.root.after(30, self.scroll_news)
 
     def update_news(self):
         world_headlines = fetch_news_world()

@@ -1,0 +1,27 @@
+# Personal settings (location, schedule)
+config.json
+
+# Runtime files
+flag.txt
+log.txt
+debug.log
+*.log
+
+# Old copies
+backup.py
+Demo.py
+*.bak
+*.orig
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

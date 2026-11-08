@@ -1,0 +1,9 @@
+{
+  "latitude": 52.52,
+  "longitude": 13.40,
+  "scheduled_show": {
+    "enabled": false,
+    "times": ["17:00", "17:15"],
+    "message": "Time to go!"
+  }
+}

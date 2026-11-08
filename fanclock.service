@@ -1,0 +1,17 @@
+[Unit]
+Description=Fanclock dashboard (fan control, clock, weather, news)
+After=graphical.target network-online.target
+Wants=network-online.target
+
+[Service]
+User=pi5
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/pi5/.Xauthority
+Environment=PYTHONUNBUFFERED=1
+WorkingDirectory=/home/pi5/Fanclock
+ExecStart=/home/pi5/Fanclock/fan_clock_display_servicestart.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

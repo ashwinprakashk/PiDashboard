@@ -16,7 +16,7 @@ weather and scrolling news headlines over rotating landscape backgrounds, with a
 - **Clock and calendar** with today highlighted.
 - **Weather:** the next 3 hours and tomorrow (min/max, sunrise/sunset), with day/night icons. Shows an offline icon when unreachable.
 - **News ticker:** world and technology headlines, refreshed every 30 minutes.
-- **Backgrounds:** a rotating set of landscape images with fade transitions.
+- **Backgrounds:** every image in `assets/backgrounds/` is shown in turn, with fade transitions.
 - **Fireworks:** click anywhere on the dashboard for a rocket and fireworks show.
   Code for a hot-air balloon and a pirate ship animation is included but currently not switched on.
 - **Full screen:** starts full screen; **F11** toggles it and **Esc** leaves it.
@@ -38,18 +38,19 @@ Nothing in this repository requires an account, token or paid plan.
 ## Repository layout
 
 ```
-Fanclock/
+PiDashboard/
 ├── fan_clock_display.py              # the dashboard
 ├── String_trigger_script.py          # send a message to the running dashboard
-├── generate_weather_icons.py         # (re)creates weather_icons/*.png
+├── generate_weather_icons.py         # (re)creates assets/weather_icons/*.png
 ├── fan_clock_display_servicestart.sh # waits for internet, then starts the dashboard
 ├── fanclock.service                  # systemd unit for autostart
 ├── config.example.json               # copy to config.json and edit
 ├── requirements.txt
-├── weather_icons/                    # generated icons
+├── assets/
+│   ├── backgrounds/                  # landscape backgrounds, any .png/.jpg (see "Image credits")
+│   ├── images/                       # hotairballon.png, icon.png, kaaspr.png (AI-generated)
+│   └── weather_icons/                # created by generate_weather_icons.py
 ├── docs/dashboard.jpg                # photo used in this README
-├── background*.png                   # landscape backgrounds (see "Image credits")
-├── hotairballon.png, icon.png, kaaspr.png   # AI-generated artwork
 └── README.md
 ```
 
@@ -184,10 +185,10 @@ sudo systemctl stop fanclock       # stop it before starting a copy by hand
 
 ## Image credits and disclaimer
 
-**AI-generated artwork (by the author):** `hotairballon.png`, `icon.png`, `kaaspr.png` and the
-weather icons (created by `generate_weather_icons.py`).
+**AI-generated artwork (by the author):** `assets/images/` (`hotairballon.png`, `icon.png`,
+`kaaspr.png`) and `assets/weather_icons/` (created by `generate_weather_icons.py`).
 
-**Background images (`background*.png`) are not the author's work.** They were collected for
+**Background images (`assets/backgrounds/`) are not the author's work.** They were collected for
 personal, non-commercial use, mainly from [Vecteezy](https://www.vecteezy.com) (free vector
 landscapes) and from Pinterest. The original artists could not be identified for every image.
 
@@ -198,7 +199,8 @@ landscapes) and from Pinterest. The original artists could not be identified for
 - If you are the creator of one of these images and want it credited differently or removed,
   please open an issue and it will be taken care of promptly.
 
-To use your own backgrounds, replace the `background*.png` files (any size; a wide aspect
-ratio such as 1920×600 looks best) or edit the file list in `fan_clock_display.py`.
+To use your own backgrounds, put any `.png` or `.jpg` files into `assets/backgrounds/`. All images
+there are shown in turn, sorted by name; a wide aspect ratio such as 1920×600 looks best. If the
+folder is empty, the dashboard uses a plain dark background.
 
 Weather data by [Open-Meteo.com](https://open-meteo.com) (CC BY 4.0). News headlines via Google News RSS.

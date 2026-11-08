@@ -26,6 +26,7 @@ from tkcalendar import Calendar
 import subprocess
 
 import json
+import re
 
 # Run from the script's own folder so images, icons and flag.txt are found
 # no matter where the program is started from.
@@ -50,6 +51,30 @@ def load_config():
         print("[INFO] config.json not found - using defaults from DEFAULT_CONFIG")
     return cfg
 CONFIG = load_config()
+
+# Asset folders
+ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+BG_DIR = os.path.join(ASSETS_DIR, "backgrounds")
+IMG_DIR = os.path.join(ASSETS_DIR, "images")
+ICON_DIR = os.path.join(ASSETS_DIR, "weather_icons")
+
+def find_backgrounds():
+    """Every .png/.jpg in assets/backgrounds, in natural order (background2 before background10)."""
+    files = []
+    if os.path.isdir(BG_DIR):
+        files = [os.path.join(BG_DIR, f) for f in os.listdir(BG_DIR)
+                 if f.lower().endswith((".png", ".jpg", ".jpeg"))]
+    def key(path):
+        stem = os.path.splitext(os.path.basename(path))[0]
+        m = re.match(r"(.*?)(\d*)$", stem)
+        return (m.group(1).lower(), int(m.group(2) or 0))
+    return sorted(files, key=key)
+
+def open_background(path):
+    """Open a background, or a plain dark image if there are none."""
+    if path is None:
+        return Image.new("RGB", (1920, 600), "#1e2a38")
+    return Image.open(path)
 
 PWM_GPIO = 18
 PWM_FREQ = 1000
@@ -393,7 +418,7 @@ class FanClockApp:
                 self.info_canvas.delete(item)
 
     def load_balloon_image(self, scale=0.1):
-        img = Image.open("hotairballon.png")
+        img = Image.open(os.path.join(IMG_DIR, "hotairballon.png"))
         # Resize for scaling
         w, h = img.size
         img = img.resize((int(w*scale), int(h*scale)), Image.Resampling.LANCZOS)
@@ -416,7 +441,7 @@ class FanClockApp:
 
     def preload_balloon_images(self, scales):
         self.balloon_photos = []
-        img = Image.open("hotairballon.png")
+        img = Image.open(os.path.join(IMG_DIR, "hotairballon.png"))
         w, h = img.size
         for s in scales:
             resized = img.resize((int(w*s), int(h*s)), Image.Resampling.LANCZOS)
@@ -698,7 +723,7 @@ class FanClockApp:
         exit_btn.pack(side=tk.RIGHT, padx=5, pady=2)
 
         # Logo
-        logo_img = Image.open("kaaspr.png")
+        logo_img = Image.open(os.path.join(IMG_DIR, "kaaspr.png"))
         logo_img = logo_img.resize((120, 40), Image.Resampling.LANCZOS)
         logo_photo = ImageTk.PhotoImage(logo_img)
         logo_label = tk.Label(topbar, image=logo_photo, bg="#222")
@@ -720,14 +745,9 @@ class FanClockApp:
         self.info_canvas.pack(side=tk.TOP, fill=tk.X, pady=0)
 
         # Background images
-        self.bg_files = [
-            "background.png", "background2.png", "background3.png",
-            "background4.png", "background5.png", "background6.png",
-            "background7.png", "background8.png", "background9.png",
-            "background10.png"
-        ]
+        self.bg_files = find_backgrounds() or [None]
         self.bg_index = 0
-        self.info_bg_orig = Image.open(self.bg_files[self.bg_index])
+        self.info_bg_orig = open_background(self.bg_files[self.bg_index])
         self.info_bg_photo = ImageTk.PhotoImage(self.info_bg_orig)
         self.info_bg_item = self.info_canvas.create_image(0, 0, anchor="nw", image=self.info_bg_photo)
 
@@ -766,7 +786,7 @@ class FanClockApp:
         )
 
         # ===== Weather icons =====
-        icon_path = "weather_icons"
+        icon_path = ICON_DIR
 
         def load_icon(name):
             img = Image.open(f"{icon_path}/{name}.png").resize((40, 40), Image.Resampling.LANCZOS)
@@ -1278,7 +1298,7 @@ class FanClockApp:
     def rotate_background(self):
         """Start fading to the next background image."""
         next_index = (self.bg_index + 1) % len(self.bg_files)
-        next_img = Image.open(self.bg_files[next_index])
+        next_img = open_background(self.bg_files[next_index])
 
         width = max(self.info_canvas.winfo_width(), 1)
         height = self.info_height

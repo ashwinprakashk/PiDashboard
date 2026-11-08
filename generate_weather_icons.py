@@ -2,7 +2,7 @@ import os
 import math
 from PIL import Image, ImageDraw, ImageFilter
 
-OUTDIR = "weather_icons"
+OUTDIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "weather_icons")
 os.makedirs(OUTDIR, exist_ok=True)
 
 def glow(draw, base_img, color, radius):
